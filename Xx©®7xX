@@ -1,0 +1,143 @@
+-- [[ Xx©®7xX Master Mod: Bang + Orbit + View ]]
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LP = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "Xx7xX_Master"
+ScreenGui.Parent = LP:WaitForChild("PlayerGui")
+ScreenGui.ResetOnSpawn = false
+
+-- [[ Toggle Button ]]
+local OpenBtn = Instance.new("TextButton")
+OpenBtn.Parent = ScreenGui
+OpenBtn.Text = "Xx7"
+OpenBtn.Size = UDim2.new(0, 45, 0, 45)
+OpenBtn.Position = UDim2.new(0, 5, 0.5, 0)
+OpenBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+OpenBtn.TextColor3 = Color3.fromRGB(255, 255, 0)
+OpenBtn.BorderSizePixel = 2
+
+local Main = Instance.new("Frame")
+Main.Parent = ScreenGui
+Main.Size = UDim2.new(0, 190, 0, 260)
+Main.Position = UDim2.new(0.3, 0, 0.25, 0)
+Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+Main.BorderSizePixel = 2
+Main.BorderColor3 = Color3.fromRGB(255, 0, 0)
+Main.Visible = true
+Main.Draggable = true
+
+OpenBtn.MouseButton1Click:Connect(function() Main.Visible = not Main.Visible end)
+
+local Input = Instance.new("TextBox")
+Input.Parent = Main
+Input.PlaceholderText = "ناڤێ یاریزانی..."
+Input.Size = UDim2.new(0.9, 0, 0, 30)
+Input.Position = UDim2.new(0.05, 0, 0.1, 0)
+Input.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Input.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local BangBtn = Instance.new("TextButton")
+BangBtn.Parent = Main
+BangBtn.Text = "BANG + VIEW (OFF)"
+BangBtn.Size = UDim2.new(0.9, 0, 0, 40)
+BangBtn.Position = UDim2.new(0.05, 0, 0.28, 0)
+BangBtn.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
+BangBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local OrbitBtn = Instance.new("TextButton")
+OrbitBtn.Parent = Main
+OrbitBtn.Text = "ORBIT (OFF)"
+OrbitBtn.Size = UDim2.new(0.9, 0, 0, 40)
+OrbitBtn.Position = UDim2.new(0.05, 0, 0.46, 0)
+OrbitBtn.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
+OrbitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local SpeedInput = Instance.new("TextBox")
+SpeedInput.Parent = Main
+SpeedInput.Text = "45"
+SpeedInput.PlaceholderText = "لەزاتی (Speed)"
+SpeedInput.Size = UDim2.new(0.9, 0, 0, 30)
+SpeedInput.Position = UDim2.new(0.05, 0, 0.68, 0)
+SpeedInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+SpeedInput.TextColor3 = Color3.fromRGB(0, 255, 0)
+
+local Status = Instance.new("TextLabel")
+Status.Parent = Main
+Status.Text = "Status: Idle"
+Status.Size = UDim2.new(1, 0, 0, 20)
+Status.Position = UDim2.new(0, 0, 0.88, 0)
+Status.BackgroundTransparency = 1
+Status.TextColor3 = Color3.fromRGB(200, 200, 200)
+
+-- [[ Logic ]]
+local Banging = false
+local Orbiting = false
+local Target = nil
+local Angle = 0
+
+local function FindT()
+    local text = Input.Text:lower()
+    if text == "" then return nil end
+    for _, p in pairs(Players:GetPlayers()) do
+        if (p.Name:lower():sub(1, #text) == text or p.DisplayName:lower():sub(1, #text) == text) and p ~= LP then
+            return p
+        end
+    end
+    return nil
+end
+
+BangBtn.MouseButton1Click:Connect(function()
+    Target = FindT()
+    if not Target then Status.Text = "نەهاتە دیتن!" return end
+    Banging = not Banging
+    if Banging then
+        BangBtn.Text = "BANG + VIEW (ON)"
+        BangBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+        Camera.CameraSubject = Target.Character:FindFirstChild("Humanoid")
+    else
+        BangBtn.Text = "BANG + VIEW (OFF)"
+        BangBtn.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
+        Camera.CameraSubject = LP.Character:FindFirstChild("Humanoid")
+    end
+end)
+
+OrbitBtn.MouseButton1Click:Connect(function()
+    Target = FindT()
+    if not Target then Status.Text = "نەهاتە دیتن!" return end
+    Orbiting = not Orbiting
+    OrbitBtn.Text = Orbiting and "ORBIT (ON)" or "ORBIT (OFF)"
+    OrbitBtn.BackgroundColor3 = Orbiting and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(100, 0, 0)
+end)
+
+RunService.Heartbeat:Connect(function(dt)
+    if (Banging or Orbiting) and Target and Target.Character and Target.Character:FindFirstChild("HumanoidRootPart") then
+        local MyRoot = LP.Character:FindFirstChild("HumanoidRootPart")
+        local T_Root = Target.Character.HumanoidRootPart
+        if MyRoot then
+            local S = tonumber(SpeedInput.Text) or 45
+            Angle = Angle + (S * dt)
+            Status.Text = "Target: " .. Target.Name
+
+            local FinalCF = T_Root.CFrame
+            
+            if Orbiting then
+                FinalCF = T_Root.CFrame * CFrame.Angles(0, Angle, 0) * CFrame.new(0, 0, 3)
+            end
+            
+            if Banging then
+                local Motion = math.sin(Angle) * 2
+                if not Orbiting then
+                    FinalCF = T_Root.CFrame * CFrame.new(0, 0, 1.2 + Motion)
+                else
+                    FinalCF = FinalCF * CFrame.new(0, 0, Motion)
+                end
+            end
+            
+            MyRoot.CFrame = CFrame.new(FinalCF.Position, T_Root.Position)
+        end
+    end
+end)
+
