@@ -31,6 +31,39 @@ DragHandle.TextSize = 20
 
 -- سیستەمێ لڤاندنێ یێ دەستی
 local Dragging = false
+-- [[ Xx©®7xX Master Mod: Manual Drag Fix ]]
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LP = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "Xx7xX_MobileFix"
+ScreenGui.Parent = LP:WaitForChild("PlayerGui")
+ScreenGui.ResetOnSpawn = false
+
+-- [[ Main Frame ]]
+local Main = Instance.new("Frame")
+Main.Parent = ScreenGui
+Main.Size = UDim2.new(0, 190, 0, 260)
+Main.Position = UDim2.new(0.3, 0, 0.3, 0)
+Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+Main.BorderSizePixel = 2
+Main.BorderColor3 = Color3.fromRGB(255, 0, 0)
+Main.Active = true
+
+-- [[ Drag Handle - ڤێ لڤێ بکە دا پەنجەرە بلڤیت ]]
+local DragHandle = Instance.new("TextButton")
+DragHandle.Parent = Main
+DragHandle.Size = UDim2.new(0, 30, 0, 30)
+DragHandle.Position = UDim2.new(0, 0, 0, 0)
+DragHandle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+DragHandle.Text = "✥"
+DragHandle.TextColor3 = Color3.fromRGB(0, 0, 0)
+DragHandle.TextSize = 20
+
+-- سیستەمێ لڤاندنێ یێ دەستی
+local Dragging = false
 local DragStart, StartPos
 DragHandle.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
