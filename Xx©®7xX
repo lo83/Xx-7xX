@@ -1,11 +1,11 @@
--- [[ Xx©®7xX Master Mod: Final Clean Version ]]
+-- [[ Xx©®7xX Master Mod: Ultimate Mobile Fix ]]
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
+local UIS = game:GetService("UserInputService")
 local LP = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
--- پاکژکرنا سکریپتێ کەڤن (Anti-Duplicate)
+-- پاکژکرنا دانێن کەڤن
 if LP.PlayerGui:FindFirstChild("Xx7xX_Final") then
     LP.PlayerGui:FindFirstChild("Xx7xX_Final"):Destroy()
 end
@@ -25,29 +25,27 @@ Main.BorderSizePixel = 2
 Main.BorderColor3 = Color3.fromRGB(255, 0, 0)
 Main.Active = true
 
--- [[ Smooth Mobile Dragging ]]
-local dragging, dragInput, dragStart, startPos
+-- [[ Ultimate Dragging System for Mobile ]]
+local Dragging, DragInput, DragStart, StartPos
 Main.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true
-        dragStart = input.Position
-        startPos = Main.Position
+        Dragging = true
+        DragStart = input.Position
+        StartPos = Main.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then Dragging = false end
+        end)
     end
 end)
 Main.InputChanged:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-        dragInput = input
+        DragInput = input
     end
 end)
-UserInputService.InputChanged:Connect(function(input)
-    if input == dragInput and dragging then
-        local delta = input.Position - dragStart
-        Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-    end
-end)
-Main.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = false
+UIS.InputChanged:Connect(function(input)
+    if input == DragInput and Dragging then
+        local Delta = input.Position - DragStart
+        Main.Position = UDim2.new(StartPos.X.Scale, StartPos.X.Offset + Delta.X, StartPos.Y.Scale, StartPos.Y.Offset + Delta.Y)
     end
 end)
 
