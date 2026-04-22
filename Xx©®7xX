@@ -1,17 +1,17 @@
--- [[ Xx©®7xX Master Mod: Ultimate Mobile Fix ]]
+-- [[ Xx©®7xX: Bang + View Fix (No Clipping) ]]
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
 local LP = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
--- پاکژکرنا دانێن کەڤن
-if LP.PlayerGui:FindFirstChild("Xx7xX_Final") then
-    LP.PlayerGui:FindFirstChild("Xx7xX_Final"):Destroy()
+-- پاکژکرنا سکریپتێن کەڤن دا نەبنە دوو دانە
+if LP.PlayerGui:FindFirstChild("Xx7xX_FinalFix") then
+    LP.PlayerGui:FindFirstChild("Xx7xX_FinalFix"):Destroy()
 end
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "Xx7xX_Final"
+ScreenGui.Name = "Xx7xX_FinalFix"
 ScreenGui.Parent = LP:WaitForChild("PlayerGui")
 ScreenGui.ResetOnSpawn = false
 
@@ -25,27 +25,24 @@ Main.BorderSizePixel = 2
 Main.BorderColor3 = Color3.fromRGB(255, 0, 0)
 Main.Active = true
 
--- [[ Ultimate Dragging System for Mobile ]]
-local Dragging, DragInput, DragStart, StartPos
+-- سیستەمێ لڤاندنا پەنجەرێ (Dragging)
+local dragging, dragInput, dragStart, startPos
 Main.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        Dragging = true
-        DragStart = input.Position
-        StartPos = Main.Position
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then Dragging = false end
-        end)
-    end
-end)
-Main.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-        DragInput = input
+        dragging = true
+        dragStart = input.Position
+        startPos = Main.Position
     end
 end)
 UIS.InputChanged:Connect(function(input)
-    if input == DragInput and Dragging then
-        local Delta = input.Position - DragStart
-        Main.Position = UDim2.new(StartPos.X.Scale, StartPos.X.Offset + Delta.X, StartPos.Y.Scale, StartPos.Y.Offset + Delta.Y)
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local delta = input.Position - dragStart
+        Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+Main.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = false
     end
 end)
 
@@ -53,18 +50,17 @@ end)
 local Title = Instance.new("TextLabel")
 Title.Parent = Main
 Title.Size = UDim2.new(1, 0, 0, 30)
-Title.Text = "Xx©®7xX"
+Title.Text = "Xx©®7xX FIX"
 Title.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
 Title.TextColor3 = Color3.fromRGB(255, 255, 0)
 
 local Input = Instance.new("TextBox")
 Input.Parent = Main
-Input.PlaceholderText = "دوو پیتێن ناڤی..."
+Input.PlaceholderText = "٢ پیتێن ناڤی..."
 Input.Size = UDim2.new(0.9, 0, 0, 35)
 Input.Position = UDim2.new(0.05, 0, 0.15, 0)
 Input.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 Input.TextColor3 = Color3.fromRGB(255, 255, 255)
-Input.Text = ""
 
 local BangBtn = Instance.new("TextButton")
 BangBtn.Parent = Main
@@ -74,17 +70,9 @@ BangBtn.Position = UDim2.new(0.05, 0, 0.35, 0)
 BangBtn.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
 BangBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-local OrbitBtn = Instance.new("TextButton")
-OrbitBtn.Parent = Main
-OrbitBtn.Text = "ORBIT (OFF)"
-OrbitBtn.Size = UDim2.new(0.9, 0, 0, 40)
-OrbitBtn.Position = UDim2.new(0.05, 0, 0.55, 0)
-OrbitBtn.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
-OrbitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-
 local SpeedInput = Instance.new("TextBox")
 SpeedInput.Parent = Main
-SpeedInput.Text = "45"
+SpeedInput.Text = "35"
 SpeedInput.Size = UDim2.new(0.9, 0, 0, 30)
 SpeedInput.Position = UDim2.new(0.05, 0, 0.75, 0)
 SpeedInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
@@ -100,7 +88,7 @@ OpenBtn.TextColor3 = Color3.fromRGB(255, 255, 0)
 OpenBtn.MouseButton1Click:Connect(function() Main.Visible = not Main.Visible end)
 
 -- [[ Logic ]]
-local Banging, Orbiting, Target, Angle = false, false, nil, 0
+local Banging, Target, Angle = false, nil, 0
 
 local function GetT()
     local text = Input.Text:lower()
@@ -119,26 +107,20 @@ BangBtn.MouseButton1Click:Connect(function()
     Camera.CameraSubject = Banging and Target.Character.Humanoid or LP.Character.Humanoid
 end)
 
-OrbitBtn.MouseButton1Click:Connect(function()
-    Target = GetT()
-    if not Target then return end
-    Orbiting = not Orbiting
-    OrbitBtn.BackgroundColor3 = Orbiting and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(120, 0, 0)
-end)
-
 RunService.Heartbeat:Connect(function(dt)
-    if (Banging or Orbiting) and Target and Target.Character and Target.Character:FindFirstChild("HumanoidRootPart") then
+    if Banging and Target and Target.Character and Target.Character:FindFirstChild("HumanoidRootPart") then
         local MyRoot = LP.Character:FindFirstChild("HumanoidRootPart")
         local T_Root = Target.Character.HumanoidRootPart
         if MyRoot then
-            Angle = Angle + ((tonumber(SpeedInput.Text) or 45) * dt)
-            local CF = T_Root.CFrame
-            if Orbiting then CF = CF * CFrame.Angles(0, Angle, 0) * CFrame.new(0, 0, 3) end
-            if Banging then
-                local M = math.sin(Angle) * 1.8
-                CF = Orbiting and CF * CFrame.new(0, 0, M) or CF * CFrame.new(0, 0, 1.2 + M)
-            end
-            MyRoot.CFrame = CFrame.new(CF.Position, T_Root.Position)
+            local speed = tonumber(SpeedInput.Text) or 35
+            Angle = Angle + (speed * dt)
+            
+            -- لڤینا Bang بێی کو بچیتە دناڤ لاشێ ویدا
+            -- 1.3 مەسافەیا پشتا وی یە (دشێی بکەی ٢ ئەگەر تە دڤێت دویرتر بیت)
+            -- math.abs(math.sin) ناهێلیت بچیتە پێش، تنێ دزڤڕیتە پاش
+            local Offset = 1.2 + (math.abs(math.sin(Angle)) * 0.8)
+            
+            MyRoot.CFrame = T_Root.CFrame * CFrame.new(0, 0, Offset)
         end
     end
 end)
