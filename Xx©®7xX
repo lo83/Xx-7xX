@@ -1,90 +1,97 @@
--- [[ Xx©®7xX Master Mod: Manual Drag Fix ]]
+-- [[ Xx©®7xX Master Mod: Final Clean Version ]]
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 local LP = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
+-- پاکژکرنا سکریپتێ کەڤن (Anti-Duplicate)
+if LP.PlayerGui:FindFirstChild("Xx7xX_Final") then
+    LP.PlayerGui:FindFirstChild("Xx7xX_Final"):Destroy()
+end
+
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "Xx7xX_MobileFix"
+ScreenGui.Name = "Xx7xX_Final"
 ScreenGui.Parent = LP:WaitForChild("PlayerGui")
 ScreenGui.ResetOnSpawn = false
 
 -- [[ Main Frame ]]
 local Main = Instance.new("Frame")
 Main.Parent = ScreenGui
-Main.Size = UDim2.new(0, 190, 0, 260)
-Main.Position = UDim2.new(0.3, 0, 0.3, 0)
+Main.Size = UDim2.new(0, 180, 0, 240)
+Main.Position = UDim2.new(0.35, 0, 0.3, 0)
 Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 Main.BorderSizePixel = 2
 Main.BorderColor3 = Color3.fromRGB(255, 0, 0)
 Main.Active = true
 
--- [[ Drag Handle - ڤێ لڤێ بکە دا پەنجەرە بلڤیت ]]
-local DragHandle = Instance.new("TextButton")
-DragHandle.Parent = Main
-DragHandle.Size = UDim2.new(0, 30, 0, 30)
-DragHandle.Position = UDim2.new(0, 0, 0, 0)
-DragHandle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-DragHandle.Text = "✥"
-DragHandle.TextColor3 = Color3.fromRGB(0, 0, 0)
-DragHandle.TextSize = 20
-
--- سیستەمێ لڤاندنێ یێ دەستی
-local Dragging = false
--- [[ Xx©®7xX Master Mod: Manual Drag Fix ]]
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local LP = Players.LocalPlayer
-local Camera = workspace.CurrentCamera
-
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "Xx7xX_MobileFix"
-ScreenGui.Parent = LP:WaitForChild("PlayerGui")
-ScreenGui.ResetOnSpawn = false
-
--- [[ Main Frame ]]
-local Main = Instance.new("Frame")
-Main.Parent = ScreenGui
-Main.Size = UDim2.new(0, 190, 0, 260)
-Main.Position = UDim2.new(0.3, 0, 0.3, 0)
-Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-Main.BorderSizePixel = 2
-Main.BorderColor3 = Color3.fromRGB(255, 0, 0)
-Main.Active = true
-
--- [[ Drag Handle - ڤێ لڤێ بکە دا پەنجەرە بلڤیت ]]
-local DragHandle = Instance.new("TextButton")
-DragHandle.Parent = Main
-DragHandle.Size = UDim2.new(0, 30, 0, 30)
-DragHandle.Position = UDim2.new(0, 0, 0, 0)
-DragHandle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-DragHandle.Text = "✥"
-DragHandle.TextColor3 = Color3.fromRGB(0, 0, 0)
-DragHandle.TextSize = 20
-
--- سیستەمێ لڤاندنێ یێ دەستی
-local Dragging = false
-local DragStart, StartPos
-DragHandle.InputBegan:Connect(function(input)
+-- [[ Smooth Mobile Dragging ]]
+local dragging, dragInput, dragStart, startPos
+Main.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        Dragging = true
-        DragStart = input.Position
-        StartPos = Main.Position
+        dragging = true
+        dragStart = input.Position
+        startPos = Main.Position
     end
 end)
-game:GetService("UserInputService").InputChanged:Connect(function(input)
-    if Dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-        local Delta = input.Position - DragStart
-        Main.Position = UDim2.new(StartPos.X.Scale, StartPos.X.Offset + Delta.X, StartPos.Y.Scale, StartPos.Y.Offset + Delta.Y)
+Main.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
     end
 end)
-DragHandle.InputEnded:Connect(function(input)
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+Main.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        Dragging = false
+        dragging = false
     end
 end)
 
 -- [[ UI Elements ]]
+local Title = Instance.new("TextLabel")
+Title.Parent = Main
+Title.Size = UDim2.new(1, 0, 0, 30)
+Title.Text = "Xx©®7xX"
+Title.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
+Title.TextColor3 = Color3.fromRGB(255, 255, 0)
+
+local Input = Instance.new("TextBox")
+Input.Parent = Main
+Input.PlaceholderText = "دوو پیتێن ناڤی..."
+Input.Size = UDim2.new(0.9, 0, 0, 35)
+Input.Position = UDim2.new(0.05, 0, 0.15, 0)
+Input.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Input.TextColor3 = Color3.fromRGB(255, 255, 255)
+Input.Text = ""
+
+local BangBtn = Instance.new("TextButton")
+BangBtn.Parent = Main
+BangBtn.Text = "BANG + VIEW"
+BangBtn.Size = UDim2.new(0.9, 0, 0, 40)
+BangBtn.Position = UDim2.new(0.05, 0, 0.35, 0)
+BangBtn.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
+BangBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local OrbitBtn = Instance.new("TextButton")
+OrbitBtn.Parent = Main
+OrbitBtn.Text = "ORBIT (OFF)"
+OrbitBtn.Size = UDim2.new(0.9, 0, 0, 40)
+OrbitBtn.Position = UDim2.new(0.05, 0, 0.55, 0)
+OrbitBtn.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
+OrbitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local SpeedInput = Instance.new("TextBox")
+SpeedInput.Parent = Main
+SpeedInput.Text = "45"
+SpeedInput.Size = UDim2.new(0.9, 0, 0, 30)
+SpeedInput.Position = UDim2.new(0.05, 0, 0.75, 0)
+SpeedInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+SpeedInput.TextColor3 = Color3.fromRGB(0, 255, 0)
+
 local OpenBtn = Instance.new("TextButton")
 OpenBtn.Parent = ScreenGui
 OpenBtn.Text = "Xx7"
@@ -93,38 +100,6 @@ OpenBtn.Position = UDim2.new(0, 5, 0.5, 0)
 OpenBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 OpenBtn.TextColor3 = Color3.fromRGB(255, 255, 0)
 OpenBtn.MouseButton1Click:Connect(function() Main.Visible = not Main.Visible end)
-
-local Input = Instance.new("TextBox")
-Input.Parent = Main
-Input.PlaceholderText = "ناڤێ یاریزانی..."
-Input.Size = UDim2.new(0.8, 0, 0, 30)
-Input.Position = UDim2.new(0.15, 0, 0.1, 0)
-Input.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-Input.TextColor3 = Color3.fromRGB(255, 255, 255)
-
-local BangBtn = Instance.new("TextButton")
-BangBtn.Parent = Main
-BangBtn.Text = "BANG + VIEW"
-BangBtn.Size = UDim2.new(0.9, 0, 0, 40)
-BangBtn.Position = UDim2.new(0.05, 0, 0.3, 0)
-BangBtn.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
-BangBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-
-local OrbitBtn = Instance.new("TextButton")
-OrbitBtn.Parent = Main
-OrbitBtn.Text = "ORBIT (OFF)"
-OrbitBtn.Size = UDim2.new(0.9, 0, 0, 40)
-OrbitBtn.Position = UDim2.new(0.05, 0, 0.5, 0)
-OrbitBtn.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
-OrbitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-
-local SpeedInput = Instance.new("TextBox")
-SpeedInput.Parent = Main
-SpeedInput.Text = "45"
-SpeedInput.Size = UDim2.new(0.9, 0, 0, 30)
-SpeedInput.Position = UDim2.new(0.05, 0, 0.75, 0)
-SpeedInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-SpeedInput.TextColor3 = Color3.fromRGB(0, 255, 0)
 
 -- [[ Logic ]]
 local Banging, Orbiting, Target, Angle = false, false, nil, 0
@@ -142,7 +117,7 @@ BangBtn.MouseButton1Click:Connect(function()
     Target = GetT()
     if not Target then return end
     Banging = not Banging
-    BangBtn.BackgroundColor3 = Banging and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(100, 0, 0)
+    BangBtn.BackgroundColor3 = Banging and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(120, 0, 0)
     Camera.CameraSubject = Banging and Target.Character.Humanoid or LP.Character.Humanoid
 end)
 
@@ -150,7 +125,7 @@ OrbitBtn.MouseButton1Click:Connect(function()
     Target = GetT()
     if not Target then return end
     Orbiting = not Orbiting
-    OrbitBtn.BackgroundColor3 = Orbiting and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(100, 0, 0)
+    OrbitBtn.BackgroundColor3 = Orbiting and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(120, 0, 0)
 end)
 
 RunService.Heartbeat:Connect(function(dt)
