@@ -1,28 +1,28 @@
--- [[ Xx©®7xX xas Mod: Bang & Orbit Control ]]
+-- [[ Xx©®7xX xas Mod: Speed Focus (No Distance) ]]
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
 local LP = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
--- سڕینا سکریپتێن کەڤن ب ناڤێ تە
-if LP.PlayerGui:FindFirstChild("Xx7xX_Xas_Menu") then LP.PlayerGui:FindFirstChild("Xx7xX_Xas_Menu"):Destroy() end
+-- سڕینا سکریپتێن کەڤن
+if LP.PlayerGui:FindFirstChild("Xx7xX_Xas_SpeedOnly") then LP.PlayerGui:FindFirstChild("Xx7xX_Xas_SpeedOnly"):Destroy() end
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "Xx7xX_Xas_Menu"
+ScreenGui.Name = "Xx7xX_Xas_SpeedOnly"
 ScreenGui.Parent = LP:WaitForChild("PlayerGui")
 ScreenGui.ResetOnSpawn = false
 
 local Main = Instance.new("Frame")
 Main.Parent = ScreenGui
-Main.Size = UDim2.new(0, 200, 0, 320)
+Main.Size = UDim2.new(0, 180, 0, 280)
 Main.Position = UDim2.new(0.35, 0, 0.3, 0)
 Main.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 Main.BorderSizePixel = 2
-Main.BorderColor3 = Color3.fromRGB(255, 255, 0) -- ڕەنگێ زەری (Gold)
+Main.BorderColor3 = Color3.fromRGB(255, 255, 0)
 Main.Active = true
 
--- Dragging System (بۆ لڤاندنا مینیویێ)
+-- Dragging System
 local dragging, dragStart, startPos
 Main.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -41,28 +41,23 @@ local Title = Instance.new("TextLabel")
 Title.Parent = Main; Title.Size = UDim2.new(1, 0, 0, 30); Title.Text = "Xx©®7xX xas"; Title.BackgroundColor3 = Color3.fromRGB(40, 40, 0); Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 local Input = Instance.new("TextBox")
-Input.Parent = Main; Input.PlaceholderText = "ناڤێ یاریزانی..."; Input.Size = UDim2.new(0.9, 0, 0, 30); Input.Position = UDim2.new(0.05, 0, 0.12, 0); Input.BackgroundColor3 = Color3.fromRGB(30, 30, 30); Input.TextColor3 = Color3.fromRGB(255, 255, 255)
+Input.Parent = Main; Input.PlaceholderText = "ناڤێ یاریزانی..."; Input.Size = UDim2.new(0.9, 0, 0, 30); Input.Position = UDim2.new(0.05, 0, 0.15, 0); Input.BackgroundColor3 = Color3.fromRGB(30, 30, 30); Input.TextColor3 = Color3.fromRGB(255, 255, 255)
 
--- دوگمەیا Bang
 local BangBtn = Instance.new("TextButton")
-BangBtn.Parent = Main; BangBtn.Text = "BANG: OFF"; BangBtn.Size = UDim2.new(0.42, 0, 0, 40); BangBtn.Position = UDim2.new(0.05, 0, 0.25, 0); BangBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0); BangBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+BangBtn.Parent = Main; BangBtn.Text = "BANG: OFF"; BangBtn.Size = UDim2.new(0.9, 0, 0, 35); BangBtn.Position = UDim2.new(0.05, 0, 0.32, 0); BangBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0); BangBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
--- دوگمەیا Orbit
 local OrbitBtn = Instance.new("TextButton")
-OrbitBtn.Parent = Main; OrbitBtn.Text = "ORBIT: OFF"; OrbitBtn.Size = UDim2.new(0.42, 0, 0, 40); OrbitBtn.Position = UDim2.new(0.53, 0, 0.25, 0); OrbitBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0); OrbitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+OrbitBtn.Parent = Main; OrbitBtn.Text = "ORBIT: OFF"; OrbitBtn.Size = UDim2.new(0.9, 0, 0, 35); OrbitBtn.Position = UDim2.new(0.05, 0, 0.47, 0); OrbitBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0); OrbitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 -- Speed Controls
-local LabelS = Instance.new("TextLabel")
-LabelS.Parent = Main; LabelS.Text = "Settings:"; LabelS.Size = UDim2.new(1, 0, 0, 20); LabelS.Position = UDim2.new(0, 0, 0.42, 0); LabelS.BackgroundTransparency = 1; LabelS.TextColor3 = Color3.fromRGB(200, 200, 200)
+local LabelB = Instance.new("TextLabel")
+LabelB.Parent = Main; LabelB.Text = "Bang Speed:"; LabelB.Size = UDim2.new(0.9, 0, 0, 20); LabelB.Position = UDim2.new(0.05, 0, 0.63, 0); LabelB.BackgroundTransparency = 1; LabelB.TextColor3 = Color3.fromRGB(200, 200, 200)
 
 local BangSpeed = Instance.new("TextBox")
-BangSpeed.Parent = Main; BangSpeed.Text = "35"; BangSpeed.PlaceholderText = "Bang Speed"; BangSpeed.Size = UDim2.new(0.9, 0, 0, 30); BangSpeed.Position = UDim2.new(0.05, 0, 0.50, 0); BangSpeed.BackgroundColor3 = Color3.fromRGB(25, 25, 25); BangSpeed.TextColor3 = Color3.fromRGB(255, 255, 0)
+BangSpeed.Parent = Main; BangSpeed.Text = "35"; BangSpeed.Size = UDim2.new(0.9, 0, 0, 30); BangSpeed.Position = UDim2.new(0.05, 0, 0.70, 0); BangSpeed.BackgroundColor3 = Color3.fromRGB(25, 25, 25); BangSpeed.TextColor3 = Color3.fromRGB(255, 255, 0)
 
-local OrbitSpeed = Instance.new("TextBox")
-OrbitSpeed.Parent = Main; OrbitSpeed.Text = "5"; OrbitSpeed.PlaceholderText = "Orbit Speed"; OrbitSpeed.Size = UDim2.new(0.9, 0, 0, 30); OrbitSpeed.Position = UDim2.new(0.05, 0, 0.62, 0); OrbitSpeed.BackgroundColor3 = Color3.fromRGB(25, 25, 25); OrbitSpeed.TextColor3 = Color3.fromRGB(0, 255, 0)
-
-local DistInput = Instance.new("TextBox")
-DistInput.Parent = Main; DistInput.Text = "1.5"; DistInput.PlaceholderText = "Distance"; DistInput.Size = UDim2.new(0.9, 0, 0, 30); DistInput.Position = UDim2.new(0.05, 0, 0.74, 0); DistInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); DistInput.TextColor3 = Color3.fromRGB(0, 255, 255)
+local OrbitSpeedInput = Instance.new("TextBox")
+OrbitSpeedInput.Parent = Main; OrbitSpeedInput.Text = "5"; OrbitSpeedInput.PlaceholderText = "Orbit Speed"; OrbitSpeedInput.Size = UDim2.new(0.9, 0, 0, 30); OrbitSpeedInput.Position = UDim2.new(0.05, 0, 0.85, 0); OrbitSpeedInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); OrbitSpeedInput.TextColor3 = Color3.fromRGB(0, 255, 0)
 
 local OpenBtn = Instance.new("TextButton")
 OpenBtn.Parent = ScreenGui; OpenBtn.Text = "Xx7"; OpenBtn.Size = UDim2.new(0, 45, 0, 45); OpenBtn.Position = UDim2.new(0, 5, 0.5, 0); OpenBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 0); OpenBtn.TextColor3 = Color3.fromRGB(255, 255, 0); OpenBtn.MouseButton1Click:Connect(function() Main.Visible = not Main.Visible end)
@@ -104,21 +99,19 @@ RunService.Heartbeat:Connect(function(dt)
         local T_Root = Target.Character.HumanoidRootPart
         if MyRoot then
             local bSpd = tonumber(BangSpeed.Text) or 35
-            local oSpd = tonumber(OrbitSpeed.Text) or 5
-            local dist = tonumber(DistInput.Text) or 1.5
+            local oSpd = tonumber(OrbitSpeedInput.Text) or 5
+            local dist = 1.5 -- مەسافەیا جێگیر
             
             BAngle = BAngle + (bSpd * dt)
             OAngle = OAngle + (oSpd * dt)
             
-            local Motion = BangActive and math.sin(BAngle) * 0.8 or 0
+            local Motion = BangActive and math.sin(BAngle) * 0.75 or 0
             
             if OrbitActive then
-                -- ئەگەر ئۆربیت کار بکەت: دزەڤریت (دگەل لێدانێ ئەگەر پێ بیت)
                 local cosX = math.cos(OAngle) * (dist + Motion)
                 local sinZ = math.sin(OAngle) * (dist + Motion)
                 MyRoot.CFrame = CFrame.new(T_Root.Position + Vector3.new(cosX, 0, sinZ), T_Root.Position)
             else
-                -- ئەگەر ب تنێ بانگ بیت: ل پشت دمینیت و لێدەت
                 MyRoot.CFrame = T_Root.CFrame * CFrame.new(0, 0, dist + Motion)
             end
         end
