@@ -1,15 +1,51 @@
--- [[ Xx©®7xX Master Mod: Bang + Orbit + View ]]
+-- [[ Xx©®7xX Master Mod: Draggable Fix ]]
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 local LP = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "Xx7xX_Master"
+ScreenGui.Name = "Xx7xX_Fixed"
 ScreenGui.Parent = LP:WaitForChild("PlayerGui")
 ScreenGui.ResetOnSpawn = false
 
--- [[ Toggle Button ]]
+-- [[ Function for Smooth Dragging on Mobile/PC ]]
+local function MakeDraggable(frame)
+    local dragging, dragInput, dragStart, startPos
+    frame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = frame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then dragging = false end
+            end)
+        end
+    end)
+    frame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - dragStart
+            frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+end
+
+-- [[ UI Elements ]]
+local Main = Instance.new("Frame")
+Main.Parent = ScreenGui
+Main.Size = UDim2.new(0, 190, 0, 260)
+Main.Position = UDim2.new(0.3, 0, 0.3, 0)
+Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+Main.BorderSizePixel = 2
+Main.BorderColor3 = Color3.fromRGB(255, 0, 0)
+MakeDraggable(Main) -- لێرە موبایل دشێت لێببەت
+
 local OpenBtn = Instance.new("TextButton")
 OpenBtn.Parent = ScreenGui
 OpenBtn.Text = "Xx7"
@@ -17,33 +53,21 @@ OpenBtn.Size = UDim2.new(0, 45, 0, 45)
 OpenBtn.Position = UDim2.new(0, 5, 0.5, 0)
 OpenBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 OpenBtn.TextColor3 = Color3.fromRGB(255, 255, 0)
-OpenBtn.BorderSizePixel = 2
-
-local Main = Instance.new("Frame")
-Main.Parent = ScreenGui
-Main.Size = UDim2.new(0, 190, 0, 260)
-Main.Position = UDim2.new(0.3, 0, 0.25, 0)
-Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-Main.BorderSizePixel = 2
-Main.BorderColor3 = Color3.fromRGB(255, 0, 0)
-Main.Visible = true
-Main.Draggable = true
-
 OpenBtn.MouseButton1Click:Connect(function() Main.Visible = not Main.Visible end)
 
 local Input = Instance.new("TextBox")
 Input.Parent = Main
-Input.PlaceholderText = "ناڤێ یاریزانی..."
-Input.Size = UDim2.new(0.9, 0, 0, 30)
-Input.Position = UDim2.new(0.05, 0, 0.1, 0)
+Input.PlaceholderText = "دوو پیتێن ناڤی..."
+Input.Size = UDim2.new(0.9, 0, 0, 35)
+Input.Position = UDim2.new(0.05, 0, 0.15, 0)
 Input.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 Input.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 local BangBtn = Instance.new("TextButton")
 BangBtn.Parent = Main
-BangBtn.Text = "BANG + VIEW (OFF)"
+BangBtn.Text = "BANG + VIEW"
 BangBtn.Size = UDim2.new(0.9, 0, 0, 40)
-BangBtn.Position = UDim2.new(0.05, 0, 0.28, 0)
+BangBtn.Position = UDim2.new(0.05, 0, 0.35, 0)
 BangBtn.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
 BangBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
@@ -51,64 +75,42 @@ local OrbitBtn = Instance.new("TextButton")
 OrbitBtn.Parent = Main
 OrbitBtn.Text = "ORBIT (OFF)"
 OrbitBtn.Size = UDim2.new(0.9, 0, 0, 40)
-OrbitBtn.Position = UDim2.new(0.05, 0, 0.46, 0)
+OrbitBtn.Position = UDim2.new(0.05, 0, 0.55, 0)
 OrbitBtn.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
 OrbitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 local SpeedInput = Instance.new("TextBox")
 SpeedInput.Parent = Main
 SpeedInput.Text = "45"
-SpeedInput.PlaceholderText = "لەزاتی (Speed)"
 SpeedInput.Size = UDim2.new(0.9, 0, 0, 30)
-SpeedInput.Position = UDim2.new(0.05, 0, 0.68, 0)
+SpeedInput.Position = UDim2.new(0.05, 0, 0.75, 0)
 SpeedInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 SpeedInput.TextColor3 = Color3.fromRGB(0, 255, 0)
 
-local Status = Instance.new("TextLabel")
-Status.Parent = Main
-Status.Text = "Status: Idle"
-Status.Size = UDim2.new(1, 0, 0, 20)
-Status.Position = UDim2.new(0, 0, 0.88, 0)
-Status.BackgroundTransparency = 1
-Status.TextColor3 = Color3.fromRGB(200, 200, 200)
-
 -- [[ Logic ]]
-local Banging = false
-local Orbiting = false
-local Target = nil
-local Angle = 0
+local Banging, Orbiting, Target, Angle = false, false, nil, 0
 
-local function FindT()
+local function GetT()
     local text = Input.Text:lower()
     if text == "" then return nil end
     for _, p in pairs(Players:GetPlayers()) do
-        if (p.Name:lower():sub(1, #text) == text or p.DisplayName:lower():sub(1, #text) == text) and p ~= LP then
-            return p
-        end
+        if (p.Name:lower():sub(1, #text) == text or p.DisplayName:lower():sub(1, #text) == text) and p ~= LP then return p end
     end
     return nil
 end
 
 BangBtn.MouseButton1Click:Connect(function()
-    Target = FindT()
-    if not Target then Status.Text = "نەهاتە دیتن!" return end
+    Target = GetT()
+    if not Target then return end
     Banging = not Banging
-    if Banging then
-        BangBtn.Text = "BANG + VIEW (ON)"
-        BangBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
-        Camera.CameraSubject = Target.Character:FindFirstChild("Humanoid")
-    else
-        BangBtn.Text = "BANG + VIEW (OFF)"
-        BangBtn.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
-        Camera.CameraSubject = LP.Character:FindFirstChild("Humanoid")
-    end
+    BangBtn.BackgroundColor3 = Banging and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(100, 0, 0)
+    Camera.CameraSubject = Banging and Target.Character.Humanoid or LP.Character.Humanoid
 end)
 
 OrbitBtn.MouseButton1Click:Connect(function()
-    Target = FindT()
-    if not Target then Status.Text = "نەهاتە دیتن!" return end
+    Target = GetT()
+    if not Target then return end
     Orbiting = not Orbiting
-    OrbitBtn.Text = Orbiting and "ORBIT (ON)" or "ORBIT (OFF)"
     OrbitBtn.BackgroundColor3 = Orbiting and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(100, 0, 0)
 end)
 
@@ -117,27 +119,14 @@ RunService.Heartbeat:Connect(function(dt)
         local MyRoot = LP.Character:FindFirstChild("HumanoidRootPart")
         local T_Root = Target.Character.HumanoidRootPart
         if MyRoot then
-            local S = tonumber(SpeedInput.Text) or 45
-            Angle = Angle + (S * dt)
-            Status.Text = "Target: " .. Target.Name
-
-            local FinalCF = T_Root.CFrame
-            
-            if Orbiting then
-                FinalCF = T_Root.CFrame * CFrame.Angles(0, Angle, 0) * CFrame.new(0, 0, 3)
-            end
-            
+            Angle = Angle + ((tonumber(SpeedInput.Text) or 45) * dt)
+            local CF = T_Root.CFrame
+            if Orbiting then CF = CF * CFrame.Angles(0, Angle, 0) * CFrame.new(0, 0, 3) end
             if Banging then
-                local Motion = math.sin(Angle) * 2
-                if not Orbiting then
-                    FinalCF = T_Root.CFrame * CFrame.new(0, 0, 1.2 + Motion)
-                else
-                    FinalCF = FinalCF * CFrame.new(0, 0, Motion)
-                end
+                local M = math.sin(Angle) * 2
+                CF = Orbiting and CF * CFrame.new(0, 0, M) or CF * CFrame.new(0, 0, 1.2 + M)
             end
-            
-            MyRoot.CFrame = CFrame.new(FinalCF.Position, T_Root.Position)
+            MyRoot.CFrame = CFrame.new(CF.Position, T_Root.Position)
         end
     end
 end)
-
