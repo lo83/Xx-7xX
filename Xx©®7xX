@@ -1,42 +1,15 @@
--- [[ Xx©®7xX Master Mod: Draggable Fix ]]
+-- [[ Xx©®7xX Master Mod: Manual Drag Fix ]]
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
 local LP = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "Xx7xX_Fixed"
+ScreenGui.Name = "Xx7xX_MobileFix"
 ScreenGui.Parent = LP:WaitForChild("PlayerGui")
 ScreenGui.ResetOnSpawn = false
 
--- [[ Function for Smooth Dragging on Mobile/PC ]]
-local function MakeDraggable(frame)
-    local dragging, dragInput, dragStart, startPos
-    frame.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-            dragStart = input.Position
-            startPos = frame.Position
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then dragging = false end
-            end)
-        end
-    end)
-    frame.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-            dragInput = input
-        end
-    end)
-    UserInputService.InputChanged:Connect(function(input)
-        if input == dragInput and dragging then
-            local delta = input.Position - dragStart
-            frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        end
-    end)
-end
-
--- [[ UI Elements ]]
+-- [[ Main Frame ]]
 local Main = Instance.new("Frame")
 Main.Parent = ScreenGui
 Main.Size = UDim2.new(0, 190, 0, 260)
@@ -44,8 +17,41 @@ Main.Position = UDim2.new(0.3, 0, 0.3, 0)
 Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 Main.BorderSizePixel = 2
 Main.BorderColor3 = Color3.fromRGB(255, 0, 0)
-MakeDraggable(Main) -- لێرە موبایل دشێت لێببەت
+Main.Active = true
 
+-- [[ Drag Handle - ڤێ لڤێ بکە دا پەنجەرە بلڤیت ]]
+local DragHandle = Instance.new("TextButton")
+DragHandle.Parent = Main
+DragHandle.Size = UDim2.new(0, 30, 0, 30)
+DragHandle.Position = UDim2.new(0, 0, 0, 0)
+DragHandle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+DragHandle.Text = "✥"
+DragHandle.TextColor3 = Color3.fromRGB(0, 0, 0)
+DragHandle.TextSize = 20
+
+-- سیستەمێ لڤاندنێ یێ دەستی
+local Dragging = false
+local DragStart, StartPos
+DragHandle.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        Dragging = true
+        DragStart = input.Position
+        StartPos = Main.Position
+    end
+end)
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if Dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local Delta = input.Position - DragStart
+        Main.Position = UDim2.new(StartPos.X.Scale, StartPos.X.Offset + Delta.X, StartPos.Y.Scale, StartPos.Y.Offset + Delta.Y)
+    end
+end)
+DragHandle.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        Dragging = false
+    end
+end)
+
+-- [[ UI Elements ]]
 local OpenBtn = Instance.new("TextButton")
 OpenBtn.Parent = ScreenGui
 OpenBtn.Text = "Xx7"
@@ -57,9 +63,9 @@ OpenBtn.MouseButton1Click:Connect(function() Main.Visible = not Main.Visible end
 
 local Input = Instance.new("TextBox")
 Input.Parent = Main
-Input.PlaceholderText = "دوو پیتێن ناڤی..."
-Input.Size = UDim2.new(0.9, 0, 0, 35)
-Input.Position = UDim2.new(0.05, 0, 0.15, 0)
+Input.PlaceholderText = "ناڤێ یاریزانی..."
+Input.Size = UDim2.new(0.8, 0, 0, 30)
+Input.Position = UDim2.new(0.15, 0, 0.1, 0)
 Input.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 Input.TextColor3 = Color3.fromRGB(255, 255, 255)
 
@@ -67,7 +73,7 @@ local BangBtn = Instance.new("TextButton")
 BangBtn.Parent = Main
 BangBtn.Text = "BANG + VIEW"
 BangBtn.Size = UDim2.new(0.9, 0, 0, 40)
-BangBtn.Position = UDim2.new(0.05, 0, 0.35, 0)
+BangBtn.Position = UDim2.new(0.05, 0, 0.3, 0)
 BangBtn.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
 BangBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
@@ -75,7 +81,7 @@ local OrbitBtn = Instance.new("TextButton")
 OrbitBtn.Parent = Main
 OrbitBtn.Text = "ORBIT (OFF)"
 OrbitBtn.Size = UDim2.new(0.9, 0, 0, 40)
-OrbitBtn.Position = UDim2.new(0.05, 0, 0.55, 0)
+OrbitBtn.Position = UDim2.new(0.05, 0, 0.5, 0)
 OrbitBtn.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
 OrbitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
@@ -123,7 +129,7 @@ RunService.Heartbeat:Connect(function(dt)
             local CF = T_Root.CFrame
             if Orbiting then CF = CF * CFrame.Angles(0, Angle, 0) * CFrame.new(0, 0, 3) end
             if Banging then
-                local M = math.sin(Angle) * 2
+                local M = math.sin(Angle) * 1.8
                 CF = Orbiting and CF * CFrame.new(0, 0, M) or CF * CFrame.new(0, 0, 1.2 + M)
             end
             MyRoot.CFrame = CFrame.new(CF.Position, T_Root.Position)
