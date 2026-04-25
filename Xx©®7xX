@@ -1,4 +1,4 @@
--- [[ Xx©®7xX xas Mod: Speed Focus (No Distance) ]]
+-- [[ Xx©®7xX xas Mod: V4 Centered UI ]]
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
@@ -15,14 +15,16 @@ ScreenGui.ResetOnSpawn = false
 
 local Main = Instance.new("Frame")
 Main.Parent = ScreenGui
-Main.Size = UDim2.new(0, 180, 0, 280)
-Main.Position = UDim2.new(0.35, 0, 0.3, 0)
+Main.Size = UDim2.new(0, 180, 0, 360)
+-- ڤێرە من کرە درست نیڤەکا شاشێ
+Main.Position = UDim2.new(0.5, -90, 0.5, -180) 
+Main.AnchorPoint = Vector2.new(0.5, 0.5)
 Main.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 Main.BorderSizePixel = 2
 Main.BorderColor3 = Color3.fromRGB(255, 255, 0)
 Main.Active = true
 
--- Dragging System
+-- Dragging System (دا تو بتوانی ب لایەکێ دی دا ببەی هەکە تە بڤێت)
 local dragging, dragStart, startPos
 Main.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -38,32 +40,34 @@ end)
 Main.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = false end end)
 
 local Title = Instance.new("TextLabel")
-Title.Parent = Main; Title.Size = UDim2.new(1, 0, 0, 30); Title.Text = "Xx©®7xX xas"; Title.BackgroundColor3 = Color3.fromRGB(40, 40, 0); Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.Parent = Main; Title.Size = UDim2.new(1, 0, 0, 30); Title.Text = "Xx©®7xX xas V4"; Title.BackgroundColor3 = Color3.fromRGB(40, 40, 0); Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 local Input = Instance.new("TextBox")
-Input.Parent = Main; Input.PlaceholderText = "ناڤێ یاریزانی..."; Input.Size = UDim2.new(0.9, 0, 0, 30); Input.Position = UDim2.new(0.05, 0, 0.15, 0); Input.BackgroundColor3 = Color3.fromRGB(30, 30, 30); Input.TextColor3 = Color3.fromRGB(255, 255, 255)
+Input.Parent = Main; Input.PlaceholderText = "ناڤێ یاریزانی..."; Input.Size = UDim2.new(0.9, 0, 0, 30); Input.Position = UDim2.new(0.05, 0, 0.10, 0); Input.BackgroundColor3 = Color3.fromRGB(30, 30, 30); Input.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-local BangBtn = Instance.new("TextButton")
-BangBtn.Parent = Main; BangBtn.Text = "BANG: OFF"; BangBtn.Size = UDim2.new(0.9, 0, 0, 35); BangBtn.Position = UDim2.new(0.05, 0, 0.32, 0); BangBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0); BangBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+-- Buttons
+local QonenBtn = Instance.new("TextButton")
+QonenBtn.Parent = Main; QonenBtn.Text = "qonen playere: OFF"; QonenBtn.Size = UDim2.new(0.9, 0, 0, 30); QonenBtn.Position = UDim2.new(0.05, 0, 0.21, 0); QonenBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0); QonenBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local DaveBtn = Instance.new("TextButton")
+DaveBtn.Parent = Main; DaveBtn.Text = "dave da: OFF"; DaveBtn.Size = UDim2.new(0.9, 0, 0, 30); DaveBtn.Position = UDim2.new(0.05, 0, 0.31, 0); DaveBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0); DaveBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 local OrbitBtn = Instance.new("TextButton")
-OrbitBtn.Parent = Main; OrbitBtn.Text = "ORBIT: OFF"; OrbitBtn.Size = UDim2.new(0.9, 0, 0, 35); OrbitBtn.Position = UDim2.new(0.05, 0, 0.47, 0); OrbitBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0); OrbitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+OrbitBtn.Parent = Main; OrbitBtn.Text = "ldor player zvrin: OFF"; OrbitBtn.Size = UDim2.new(0.9, 0, 0, 30); OrbitBtn.Position = UDim2.new(0.05, 0, 0.41, 0); OrbitBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0); OrbitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local KillBtn = Instance.new("TextButton")
+KillBtn.Parent = Main; KillBtn.Text = "koshtna yaryzana: OFF"; KillBtn.Size = UDim2.new(0.9, 0, 0, 30); KillBtn.Position = UDim2.new(0.05, 0, 0.51, 0); KillBtn.BackgroundColor3 = Color3.fromRGB(150, 0, 0); KillBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 -- Speed Controls
-local LabelB = Instance.new("TextLabel")
-LabelB.Parent = Main; LabelB.Text = "Bang Speed:"; LabelB.Size = UDim2.new(0.9, 0, 0, 20); LabelB.Position = UDim2.new(0.05, 0, 0.63, 0); LabelB.BackgroundTransparency = 1; LabelB.TextColor3 = Color3.fromRGB(200, 200, 200)
-
 local BangSpeed = Instance.new("TextBox")
-BangSpeed.Parent = Main; BangSpeed.Text = "35"; BangSpeed.Size = UDim2.new(0.9, 0, 0, 30); BangSpeed.Position = UDim2.new(0.05, 0, 0.70, 0); BangSpeed.BackgroundColor3 = Color3.fromRGB(25, 25, 25); BangSpeed.TextColor3 = Color3.fromRGB(255, 255, 0)
+BangSpeed.Parent = Main; BangSpeed.Text = "35"; BangSpeed.Size = UDim2.new(0.9, 0, 0, 30); BangSpeed.Position = UDim2.new(0.05, 0, 0.65, 0); BangSpeed.BackgroundColor3 = Color3.fromRGB(25, 25, 25); BangSpeed.TextColor3 = Color3.fromRGB(255, 255, 0)
 
 local OrbitSpeedInput = Instance.new("TextBox")
-OrbitSpeedInput.Parent = Main; OrbitSpeedInput.Text = "5"; OrbitSpeedInput.PlaceholderText = "Orbit Speed"; OrbitSpeedInput.Size = UDim2.new(0.9, 0, 0, 30); OrbitSpeedInput.Position = UDim2.new(0.05, 0, 0.85, 0); OrbitSpeedInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); OrbitSpeedInput.TextColor3 = Color3.fromRGB(0, 255, 0)
-
-local OpenBtn = Instance.new("TextButton")
-OpenBtn.Parent = ScreenGui; OpenBtn.Text = "Xx7"; OpenBtn.Size = UDim2.new(0, 45, 0, 45); OpenBtn.Position = UDim2.new(0, 5, 0.5, 0); OpenBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 0); OpenBtn.TextColor3 = Color3.fromRGB(255, 255, 0); OpenBtn.MouseButton1Click:Connect(function() Main.Visible = not Main.Visible end)
+OrbitSpeedInput.Parent = Main; OrbitSpeedInput.Text = "5"; OrbitSpeedInput.Size = UDim2.new(0.9, 0, 0, 30); OrbitSpeedInput.Position = UDim2.new(0.05, 0, 0.76, 0); OrbitSpeedInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); OrbitSpeedInput.TextColor3 = Color3.fromRGB(0, 255, 0)
 
 -- [[ Logic ]]
-local BangActive, OrbitActive, Target = false, false, nil
+local Mode = "None"
+local Target = nil
 local BAngle, OAngle = 0, 0
 
 local function GetTarget()
@@ -72,48 +76,46 @@ local function GetTarget()
     for _, p in pairs(Players:GetPlayers()) do
         if (p.Name:lower():sub(1, #text) == text or p.DisplayName:lower():sub(1, #text) == text) and p ~= LP then return p end
     end
-    return nil
 end
 
-BangBtn.MouseButton1Click:Connect(function()
-    Target = GetTarget()
-    if not Target then return end
-    BangActive = not BangActive
-    BangBtn.Text = BangActive and "BANG: ON" or "BANG: OFF"
-    BangBtn.BackgroundColor3 = BangActive and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(80, 0, 0)
-    Camera.CameraSubject = (BangActive or OrbitActive) and Target.Character.Humanoid or LP.Character.Humanoid
-end)
+local function UpdateButtons()
+    QonenBtn.Text = "qonen playere: " .. (Mode == "Qonen" and "ON" or "OFF")
+    QonenBtn.BackgroundColor3 = (Mode == "Qonen" and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(80, 0, 0))
+    DaveBtn.Text = "dave da: " .. (Mode == "Dave" and "ON" or "OFF")
+    DaveBtn.BackgroundColor3 = (Mode == "Dave" and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(80, 0, 0))
+    OrbitBtn.Text = "ldor player zvrin: " .. (Mode == "Orbit" and "ON" or "OFF")
+    OrbitBtn.BackgroundColor3 = (Mode == "Orbit" and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(80, 0, 0))
+    KillBtn.Text = "koshtna yaryzana: " .. (Mode == "Kill" and "ON" or "OFF")
+    KillBtn.BackgroundColor3 = (Mode == "Kill" and Color3.fromRGB(255, 80, 0) or Color3.fromRGB(150, 0, 0))
+end
 
-OrbitBtn.MouseButton1Click:Connect(function()
-    Target = GetTarget()
-    if not Target then return end
-    OrbitActive = not OrbitActive
-    OrbitBtn.Text = OrbitActive and "ORBIT: ON" or "ORBIT: OFF"
-    OrbitBtn.BackgroundColor3 = OrbitActive and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(80, 0, 0)
-    Camera.CameraSubject = (BangActive or OrbitActive) and Target.Character.Humanoid or LP.Character.Humanoid
-end)
+QonenBtn.MouseButton1Click:Connect(function() Target = GetTarget(); Mode = (Mode == "Qonen" and "None" or "Qonen"); UpdateButtons() end)
+DaveBtn.MouseButton1Click:Connect(function() Target = GetTarget(); Mode = (Mode == "Dave" and "None" or "Dave"); UpdateButtons() end)
+OrbitBtn.MouseButton1Click:Connect(function() Target = GetTarget(); Mode = (Mode == "Orbit" and "None" or "Orbit"); UpdateButtons() end)
+KillBtn.MouseButton1Click:Connect(function() Target = GetTarget(); Mode = (Mode == "Kill" and "None" or "Kill"); UpdateButtons() end)
 
 RunService.Heartbeat:Connect(function(dt)
-    if (BangActive or OrbitActive) and Target and Target.Character and Target.Character:FindFirstChild("HumanoidRootPart") then
+    if Mode ~= "None" and Target and Target.Character and Target.Character:FindFirstChild("HumanoidRootPart") then
         local MyRoot = LP.Character:FindFirstChild("HumanoidRootPart")
         local T_Root = Target.Character.HumanoidRootPart
         if MyRoot then
-            local bSpd = tonumber(BangSpeed.Text) or 35
-            local oSpd = tonumber(OrbitSpeedInput.Text) or 5
-            local dist = 1.5 -- مەسافەیا جێگیر
+            BAngle = BAngle + ((tonumber(BangSpeed.Text) or 35) * dt)
+            OAngle = OAngle + ((tonumber(OrbitSpeedInput.Text) or 5) * dt)
             
-            BAngle = BAngle + (bSpd * dt)
-            OAngle = OAngle + (oSpd * dt)
-            
-            local Motion = BangActive and math.sin(BAngle) * 0.75 or 0
-            
-            if OrbitActive then
-                local cosX = math.cos(OAngle) * (dist + Motion)
-                local sinZ = math.sin(OAngle) * (dist + Motion)
-                MyRoot.CFrame = CFrame.new(T_Root.Position + Vector3.new(cosX, 0, sinZ), T_Root.Position)
-            else
-                MyRoot.CFrame = T_Root.CFrame * CFrame.new(0, 0, dist + Motion)
+            if Mode == "Qonen" then
+                MyRoot.CFrame = T_Root.CFrame * CFrame.new(0, 0, 1.5 + math.sin(BAngle) * 0.8)
+            elseif Mode == "Dave" then
+                MyRoot.CFrame = T_Root.CFrame * CFrame.new(0, 0.8, -1.2 + math.sin(BAngle) * 0.8) * CFrame.Angles(0, math.pi, 0)
+            elseif Mode == "Orbit" then
+                MyRoot.CFrame = CFrame.new(T_Root.Position + Vector3.new(math.cos(OAngle)*2.5, 0, math.sin(OAngle)*2.5), T_Root.Position)
+            elseif Mode == "Kill" then
+                local FlingAngle = tick() * 50 
+                MyRoot.Velocity = Vector3.new(500, 500, 500)
+                MyRoot.CFrame = CFrame.new(T_Root.Position + Vector3.new(math.cos(FlingAngle)*1.5, 0, math.sin(FlingAngle)*1.5), T_Root.Position)
             end
         end
     end
 end)
+
+local OpenBtn = Instance.new("TextButton")
+OpenBtn.Parent = ScreenGui; OpenBtn.Text = "Xx7"; OpenBtn.Size = UDim2.new(0, 45, 0, 45); OpenBtn.Position = UDim2.new(0, 5, 0.5, 0); OpenBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 0); OpenBtn.TextColor3 = Color3.fromRGB(255, 255, 0); OpenBtn.MouseButton1Click:Connect(function() Main.Visible = not Main.Visible end)
