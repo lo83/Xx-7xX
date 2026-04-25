@@ -1,43 +1,25 @@
--- [[ Xx©®7xX xas Mod: V4 Centered UI ]]
+-- [[ Xx©®7xX xas Mod: V4 Dave Height Boost ]]
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local UIS = game:GetService("UserInputService")
 local LP = Players.LocalPlayer
-local Camera = workspace.CurrentCamera
 
--- سڕینا سکریپتێن کەڤن
-if LP.PlayerGui:FindFirstChild("Xx7xX_Xas_SpeedOnly") then LP.PlayerGui:FindFirstChild("Xx7xX_Xas_SpeedOnly"):Destroy() end
+if LP.PlayerGui:FindFirstChild("Xx7xX_Xas_Final") then LP.PlayerGui:FindFirstChild("Xx7xX_Xas_Final"):Destroy() end
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "Xx7xX_Xas_SpeedOnly"
+ScreenGui.Name = "Xx7xX_Xas_Final"
 ScreenGui.Parent = LP:WaitForChild("PlayerGui")
 ScreenGui.ResetOnSpawn = false
 
 local Main = Instance.new("Frame")
 Main.Parent = ScreenGui
 Main.Size = UDim2.new(0, 180, 0, 360)
--- ڤێرە من کرە درست نیڤەکا شاشێ
-Main.Position = UDim2.new(0.5, -90, 0.5, -180) 
+Main.Position = UDim2.new(0.5, 0, 0.5, 0)
 Main.AnchorPoint = Vector2.new(0.5, 0.5)
 Main.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 Main.BorderSizePixel = 2
 Main.BorderColor3 = Color3.fromRGB(255, 255, 0)
 Main.Active = true
-
--- Dragging System (دا تو بتوانی ب لایەکێ دی دا ببەی هەکە تە بڤێت)
-local dragging, dragStart, startPos
-Main.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true; dragStart = input.Position; startPos = Main.Position
-    end
-end)
-UIS.InputChanged:Connect(function(input)
-    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-        local delta = input.Position - dragStart
-        Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-    end
-end)
-Main.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = false end end)
+Main.Draggable = true
 
 local Title = Instance.new("TextLabel")
 Title.Parent = Main; Title.Size = UDim2.new(1, 0, 0, 30); Title.Text = "Xx©®7xX xas V4"; Title.BackgroundColor3 = Color3.fromRGB(40, 40, 0); Title.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -58,12 +40,8 @@ OrbitBtn.Parent = Main; OrbitBtn.Text = "ldor player zvrin: OFF"; OrbitBtn.Size 
 local KillBtn = Instance.new("TextButton")
 KillBtn.Parent = Main; KillBtn.Text = "koshtna yaryzana: OFF"; KillBtn.Size = UDim2.new(0.9, 0, 0, 30); KillBtn.Position = UDim2.new(0.05, 0, 0.51, 0); KillBtn.BackgroundColor3 = Color3.fromRGB(150, 0, 0); KillBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
--- Speed Controls
 local BangSpeed = Instance.new("TextBox")
 BangSpeed.Parent = Main; BangSpeed.Text = "35"; BangSpeed.Size = UDim2.new(0.9, 0, 0, 30); BangSpeed.Position = UDim2.new(0.05, 0, 0.65, 0); BangSpeed.BackgroundColor3 = Color3.fromRGB(25, 25, 25); BangSpeed.TextColor3 = Color3.fromRGB(255, 255, 0)
-
-local OrbitSpeedInput = Instance.new("TextBox")
-OrbitSpeedInput.Parent = Main; OrbitSpeedInput.Text = "5"; OrbitSpeedInput.Size = UDim2.new(0.9, 0, 0, 30); OrbitSpeedInput.Position = UDim2.new(0.05, 0, 0.76, 0); OrbitSpeedInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); OrbitSpeedInput.TextColor3 = Color3.fromRGB(0, 255, 0)
 
 -- [[ Logic ]]
 local Mode = "None"
@@ -78,21 +56,10 @@ local function GetTarget()
     end
 end
 
-local function UpdateButtons()
-    QonenBtn.Text = "qonen playere: " .. (Mode == "Qonen" and "ON" or "OFF")
-    QonenBtn.BackgroundColor3 = (Mode == "Qonen" and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(80, 0, 0))
-    DaveBtn.Text = "dave da: " .. (Mode == "Dave" and "ON" or "OFF")
-    DaveBtn.BackgroundColor3 = (Mode == "Dave" and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(80, 0, 0))
-    OrbitBtn.Text = "ldor player zvrin: " .. (Mode == "Orbit" and "ON" or "OFF")
-    OrbitBtn.BackgroundColor3 = (Mode == "Orbit" and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(80, 0, 0))
-    KillBtn.Text = "koshtna yaryzana: " .. (Mode == "Kill" and "ON" or "OFF")
-    KillBtn.BackgroundColor3 = (Mode == "Kill" and Color3.fromRGB(255, 80, 0) or Color3.fromRGB(150, 0, 0))
-end
-
-QonenBtn.MouseButton1Click:Connect(function() Target = GetTarget(); Mode = (Mode == "Qonen" and "None" or "Qonen"); UpdateButtons() end)
-DaveBtn.MouseButton1Click:Connect(function() Target = GetTarget(); Mode = (Mode == "Dave" and "None" or "Dave"); UpdateButtons() end)
-OrbitBtn.MouseButton1Click:Connect(function() Target = GetTarget(); Mode = (Mode == "Orbit" and "None" or "Orbit"); UpdateButtons() end)
-KillBtn.MouseButton1Click:Connect(function() Target = GetTarget(); Mode = (Mode == "Kill" and "None" or "Kill"); UpdateButtons() end)
+QonenBtn.MouseButton1Click:Connect(function() Target = GetTarget(); Mode = (Mode == "Qonen" and "None" or "Qonen") end)
+DaveBtn.MouseButton1Click:Connect(function() Target = GetTarget(); Mode = (Mode == "Dave" and "None" or "Dave") end)
+OrbitBtn.MouseButton1Click:Connect(function() Target = GetTarget(); Mode = (Mode == "Orbit" and "None" or "Orbit") end)
+KillBtn.MouseButton1Click:Connect(function() Target = GetTarget(); Mode = (Mode == "Kill" and "None" or "Kill") end)
 
 RunService.Heartbeat:Connect(function(dt)
     if Mode ~= "None" and Target and Target.Character and Target.Character:FindFirstChild("HumanoidRootPart") then
@@ -100,18 +67,19 @@ RunService.Heartbeat:Connect(function(dt)
         local T_Root = Target.Character.HumanoidRootPart
         if MyRoot then
             BAngle = BAngle + ((tonumber(BangSpeed.Text) or 35) * dt)
-            OAngle = OAngle + ((tonumber(OrbitSpeedInput.Text) or 5) * dt)
+            local Motion = math.sin(BAngle) * 0.8
             
             if Mode == "Qonen" then
-                MyRoot.CFrame = T_Root.CFrame * CFrame.new(0, 0, 1.5 + math.sin(BAngle) * 0.8)
+                MyRoot.CFrame = T_Root.CFrame * CFrame.new(0, 0, 1.5 + Motion)
             elseif Mode == "Dave" then
-                MyRoot.CFrame = T_Root.CFrame * CFrame.new(0, 0.8, -1.2 + math.sin(BAngle) * 0.8) * CFrame.Angles(0, math.pi, 0)
+                -- ل ڤێره‌ بلنداهی من زێده‌ كر بۆ (1.4) دا بگه‌هیته‌ ئاستێ سه‌ری و ده‌ڤی
+                MyRoot.CFrame = T_Root.CFrame * CFrame.new(0, 1.4, -0.9 - Motion) * CFrame.Angles(0, math.pi, 0)
             elseif Mode == "Orbit" then
-                MyRoot.CFrame = CFrame.new(T_Root.Position + Vector3.new(math.cos(OAngle)*2.5, 0, math.sin(OAngle)*2.5), T_Root.Position)
+                OAngle = OAngle + (5 * dt)
+                MyRoot.CFrame = CFrame.new(T_Root.Position + Vector3.new(math.cos(OAngle)*3, 0, math.sin(OAngle)*3), T_Root.Position)
             elseif Mode == "Kill" then
-                local FlingAngle = tick() * 50 
-                MyRoot.Velocity = Vector3.new(500, 500, 500)
-                MyRoot.CFrame = CFrame.new(T_Root.Position + Vector3.new(math.cos(FlingAngle)*1.5, 0, math.sin(FlingAngle)*1.5), T_Root.Position)
+                MyRoot.Velocity = Vector3.new(1000, 1000, 1000)
+                MyRoot.CFrame = T_Root.CFrame * CFrame.Angles(0, tick()*20, 0)
             end
         end
     end
