@@ -1,4 +1,4 @@
--- [[ Xx©®7xX xas Mod: V4 Dave Height Boost ]]
+-- [[ Xx©®7xX xas Mod: V4 - Clean Version ]]
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local LP = Players.LocalPlayer
@@ -12,7 +12,7 @@ ScreenGui.ResetOnSpawn = false
 
 local Main = Instance.new("Frame")
 Main.Parent = ScreenGui
-Main.Size = UDim2.new(0, 180, 0, 360)
+Main.Size = UDim2.new(0, 180, 0, 310) -- قەبارە هاتە کێمکرن
 Main.Position = UDim2.new(0.5, 0, 0.5, 0)
 Main.AnchorPoint = Vector2.new(0.5, 0.5)
 Main.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
@@ -25,20 +25,17 @@ local Title = Instance.new("TextLabel")
 Title.Parent = Main; Title.Size = UDim2.new(1, 0, 0, 30); Title.Text = "Xx©®7xX xas V4"; Title.BackgroundColor3 = Color3.fromRGB(40, 40, 0); Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 local Input = Instance.new("TextBox")
-Input.Parent = Main; Input.PlaceholderText = "ناڤێ یاریزانی..."; Input.Size = UDim2.new(0.9, 0, 0, 30); Input.Position = UDim2.new(0.05, 0, 0.10, 0); Input.BackgroundColor3 = Color3.fromRGB(30, 30, 30); Input.TextColor3 = Color3.fromRGB(255, 255, 255)
+Input.Parent = Main; Input.PlaceholderText = "ناڤێ یاریزانی..."; Input.Size = UDim2.new(0.9, 0, 0, 30); Input.Position = UDim2.new(0.05, 0, 0.12, 0); Input.BackgroundColor3 = Color3.fromRGB(30, 30, 30); Input.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 -- Buttons
 local QonenBtn = Instance.new("TextButton")
-QonenBtn.Parent = Main; QonenBtn.Text = "qonen playere: OFF"; QonenBtn.Size = UDim2.new(0.9, 0, 0, 30); QonenBtn.Position = UDim2.new(0.05, 0, 0.21, 0); QonenBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0); QonenBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+QonenBtn.Parent = Main; QonenBtn.Text = "qonen playere: OFF"; QonenBtn.Size = UDim2.new(0.9, 0, 0, 30); QonenBtn.Position = UDim2.new(0.05, 0, 0.25, 0); QonenBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0); QonenBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 local DaveBtn = Instance.new("TextButton")
-DaveBtn.Parent = Main; DaveBtn.Text = "dave da: OFF"; DaveBtn.Size = UDim2.new(0.9, 0, 0, 30); DaveBtn.Position = UDim2.new(0.05, 0, 0.31, 0); DaveBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0); DaveBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+DaveBtn.Parent = Main; DaveBtn.Text = "dave da: OFF"; DaveBtn.Size = UDim2.new(0.9, 0, 0, 30); DaveBtn.Position = UDim2.new(0.05, 0, 0.37, 0); DaveBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0); DaveBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 local OrbitBtn = Instance.new("TextButton")
-OrbitBtn.Parent = Main; OrbitBtn.Text = "ldor player zvrin: OFF"; OrbitBtn.Size = UDim2.new(0.9, 0, 0, 30); OrbitBtn.Position = UDim2.new(0.05, 0, 0.41, 0); OrbitBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0); OrbitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-
-local KillBtn = Instance.new("TextButton")
-KillBtn.Parent = Main; KillBtn.Text = "koshtna yaryzana: OFF"; KillBtn.Size = UDim2.new(0.9, 0, 0, 30); KillBtn.Position = UDim2.new(0.05, 0, 0.51, 0); KillBtn.BackgroundColor3 = Color3.fromRGB(150, 0, 0); KillBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+OrbitBtn.Parent = Main; OrbitBtn.Text = "ldor player zvrin: OFF"; OrbitBtn.Size = UDim2.new(0.9, 0, 0, 30); OrbitBtn.Position = UDim2.new(0.05, 0, 0.49, 0); OrbitBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0); OrbitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 local BangSpeed = Instance.new("TextBox")
 BangSpeed.Parent = Main; BangSpeed.Text = "35"; BangSpeed.Size = UDim2.new(0.9, 0, 0, 30); BangSpeed.Position = UDim2.new(0.05, 0, 0.65, 0); BangSpeed.BackgroundColor3 = Color3.fromRGB(25, 25, 25); BangSpeed.TextColor3 = Color3.fromRGB(255, 255, 0)
@@ -59,7 +56,6 @@ end
 QonenBtn.MouseButton1Click:Connect(function() Target = GetTarget(); Mode = (Mode == "Qonen" and "None" or "Qonen") end)
 DaveBtn.MouseButton1Click:Connect(function() Target = GetTarget(); Mode = (Mode == "Dave" and "None" or "Dave") end)
 OrbitBtn.MouseButton1Click:Connect(function() Target = GetTarget(); Mode = (Mode == "Orbit" and "None" or "Orbit") end)
-KillBtn.MouseButton1Click:Connect(function() Target = GetTarget(); Mode = (Mode == "Kill" and "None" or "Kill") end)
 
 RunService.Heartbeat:Connect(function(dt)
     if Mode ~= "None" and Target and Target.Character and Target.Character:FindFirstChild("HumanoidRootPart") then
@@ -72,14 +68,10 @@ RunService.Heartbeat:Connect(function(dt)
             if Mode == "Qonen" then
                 MyRoot.CFrame = T_Root.CFrame * CFrame.new(0, 0, 1.5 + Motion)
             elseif Mode == "Dave" then
-                -- ل ڤێره‌ بلنداهی من زێده‌ كر بۆ (1.4) دا بگه‌هیته‌ ئاستێ سه‌ری و ده‌ڤی
                 MyRoot.CFrame = T_Root.CFrame * CFrame.new(0, 1.4, -0.9 - Motion) * CFrame.Angles(0, math.pi, 0)
             elseif Mode == "Orbit" then
                 OAngle = OAngle + (5 * dt)
                 MyRoot.CFrame = CFrame.new(T_Root.Position + Vector3.new(math.cos(OAngle)*3, 0, math.sin(OAngle)*3), T_Root.Position)
-            elseif Mode == "Kill" then
-                MyRoot.Velocity = Vector3.new(1000, 1000, 1000)
-                MyRoot.CFrame = T_Root.CFrame * CFrame.Angles(0, tick()*20, 0)
             end
         end
     end
